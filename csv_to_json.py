@@ -1,13 +1,18 @@
 import sys
+import csv
+
 fn = sys.argv[1]
-print fn
+print(fn)
 
 res = 'var scores = {'
-for line in open(fn):
-    sp = line.strip().split('\t')
-    if len(sp) < 2:
-        continue
-    res += '"%s" : "%s", ' % (sp[0].strip().upper(), sp[1].strip())
+with open(fn, newline='') as csvfile:
+    reader = csv.reader(csvfile)
+    row = next(reader)
+    SID_idx = row.index('SID')
+    score_idx = row.index('Total Score')
+    for row in reader:
+        if row[score_idx] != '':
+            res += '"%s" : "%s", ' % (row[SID_idx].upper(), row[score_idx])
 
 res += '};'
-print res
+print(res)
